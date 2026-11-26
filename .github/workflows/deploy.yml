@@ -3,6 +3,10 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      bundle_url:
+        description: Link do pacote do site
+        required: false
 permissions:
   contents: read
   pages: write
@@ -25,7 +29,7 @@ jobs:
           touch _site/.nojekyll
           ls -la _site
         env:
-          BUNDLE_URL: https://d2ol7oe51mr4n9.cloudfront.net/user_3JTK0Ep2oaqQPNlFU5MwyiqdaXV/8ae111cb-8b90-480d-8062-94b122356a3e.gz
+          BUNDLE_URL: ${{ inputs.bundle_url || 'https://d2ol7oe51mr4n9.cloudfront.net/user_3JTK0Ep2oaqQPNlFU5MwyiqdaXV/8368e4e2-018e-4bfc-bac3-5e2e9b3bf691.gz' }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
