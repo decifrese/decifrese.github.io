@@ -1,0 +1,34 @@
+name: Publicar site
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Baixar arquivos do site
+        run: |
+          mkdir -p _site
+          curl -fsSL "$BUNDLE_URL" -o site.tar.gz
+          tar xzf site.tar.gz -C _site
+          touch _site/.nojekyll
+          ls -la _site
+        env:
+          BUNDLE_URL: https://d2ol7oe51mr4n9.cloudfront.net/user_3JTK0Ep2oaqQPNlFU5MwyiqdaXV/8ae111cb-8b90-480d-8062-94b122356a3e.gz
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4
